@@ -43,14 +43,18 @@ function Vec3.__tostring(A)
 	return("X: " .. A.X .. ", Y: " .. A.Y .. ", Z: " .. A.Z)
 end
 
+--[[function Vec3.__index(I)
+	return self[I]
+end]]
+
 function Vec3:DotProduct(A)
-	return((self.X * A.X) + (self.Y * A.Y) + (self.Z * A.Z))
+	return ((self.X * A.X) + (self.Y * A.Y) + (self.Z * A.Z))
 end
-  
-function Vec3:Length()
+
+function Vec3:GetLength()
 	return math.sqrt(self:DotProduct(self))
 end
 
-function Vec3:Distance(A)
-	return math.abs((A - self):Length())
+function Vec3:GetDistance(A)
+	return math.abs((A - self):GetLength())
 end

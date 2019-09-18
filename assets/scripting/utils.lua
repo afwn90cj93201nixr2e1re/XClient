@@ -27,5 +27,5 @@ end
 
 function GetDistance(Target)
 	local origin = Vec3.New(Client.GetOrigin())
-	return origin:Distance(Target)
+	return origin:GetDistance(Target)
 end

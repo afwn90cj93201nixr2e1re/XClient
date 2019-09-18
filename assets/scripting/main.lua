@@ -7,11 +7,14 @@
 	
 	Client.SendCommand(s)
 	Client.GetIndex() -> int
+	Client.GetMap() -> string
+	Client.GetGameDir() -> string
 	Client.GetOrigin() -> vec3
 	Client.GetEntitiesCount() -> int
 	Client.IsEntityActive(int) -> bool
 	Client.IsPlayerIndex(int) -> bool
 	Client.GetEntity(int) -> ent table
+	Client.TraceLine(vec3, vec3) -> trace_result table
 ]]
 
 require "buffer"
@@ -20,12 +23,9 @@ require "gmsg"
 require "vec3"
 require "utils"
 require "move"
-require "bsp"
 
 local GameMessageCallbacks = {}
-local FirstThink = false
 local ThinkTime = 0
-local bsp = nil
 local UserCmd = {}
 
 function Initialize()
@@ -35,8 +35,6 @@ function Initialize()
 	
 	Console.Execute("sys_framerate 60")
 	Console.Execute("connect 127.0.0.1")
-
-	--bsp = BSP.New("cstrike/maps/cs_assault.bsp")
 end
 
 function ReadGameMessage(Name, Memory)
@@ -55,10 +53,8 @@ function ReadGameMessage(Name, Memory)
 end
 
 function IsResourceRequired(Name)
-	if Name == Client.GetMap() then
-		return true
-	end
-	
+	-- return true if you want this resource to be downloaded
+
 	return false
 end
 
@@ -66,12 +62,13 @@ function Frame(dTime)
 	--Log(tostring(dTime))
 end
 
-function Think()
-	if not FirstThink then
-		InitializeGame()
-		FirstThink = true
-	end
+function InitializeGame()
+	Log "game initialized"
+	Console.Execute("delay 1 '" .. 'cmd "jointeam 2"' .. "'")
+	Console.Execute("delay 2 '" .. 'cmd "joinclass 6"' .. "'")
+end
 
+function Think()
 	local now = os.clock() * 1000.0
 	local thinkDelta = now - ThinkTime
 	ThinkTime = now
@@ -105,10 +102,7 @@ function MoveFrom(Target)
 	UserCmd.SideMove = -UserCmd.SideMove
 end
 
-function InitializeGame()
-	Log "game initialized"
-	Console.Execute("delay 1 '" .. 'cmd "jointeam 2"' .. "'")
-	Console.Execute("delay 2 '" .. 'cmd "joinclass 6"' .. "'")
-
-	bsp = BSP.New(Client.GetGameDir() .. "/" .. Client.GetMap())
+function IsVisible(Target)
+	local trace = Client.TraceLine(Vec3.New(Client.GetOrigin()), Target)
+	return trace.Fraction >= 1.0;
 end
