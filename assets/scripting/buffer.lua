@@ -23,7 +23,7 @@ function Buffer:HasSpace(Size)
 end
 
 function Buffer:EnsureSpace(Size)
-	if self.Size >= self.Position + Size then
+	if self:HasSpace(Size) then
 		return
 	end
 	self.Size = self.Position + Size

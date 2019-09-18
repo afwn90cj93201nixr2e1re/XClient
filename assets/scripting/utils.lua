@@ -30,7 +30,14 @@ function GetDistance(Target)
 	return origin:GetDistance(Target)
 end
 
-function IsVisible(Target)
-	local trace = Client.TraceLine(Vec3.New(Client.GetOrigin()), Target)
+function IsVisible(Target, Origin)
+	local o = Origin
+
+	if o == nil then
+		o = Vec3.New(Client.GetOrigin())
+	end
+
+	local trace = Client.TraceLine(o, Target)
+
 	return trace.Fraction >= 1.0;
 end

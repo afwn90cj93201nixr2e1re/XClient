@@ -27,12 +27,6 @@ function Move()
 	local origin = Vec3.New(player.origin)
 
 	LookAt(origin)
-
-	if IsVisible(origin) then
-		print("visible")
-	else
-		print("not visible")
-	end
 	
 	local distance = GetDistance(origin)
 

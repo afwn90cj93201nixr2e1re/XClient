@@ -15,6 +15,7 @@
 	Client.IsPlayerIndex(int) -> bool
 	Client.GetEntity(int) -> ent table
 	Client.TraceLine(vec3, vec3) -> trace_result table
+	Client.SetCertificate(buffer)
 ]]
 
 require "buffer"
@@ -32,6 +33,7 @@ function Initialize()
 	TestFeatures()
 	InitializeGmsgCallbacks(GameMessageCallbacks)
 	math.randomseed(os.clock())
+	GenerateCertificate()
 	
 	Console.Execute("sys_framerate 60")
 	Console.Execute("connect 127.0.0.1")
@@ -100,4 +102,13 @@ function MoveFrom(Target)
 	MoveTo(Target)
 	UserCmd.ForwardMove = -UserCmd.ForwardMove
 	UserCmd.SideMove = -UserCmd.SideMove
+end
+
+function GenerateCertificate()
+	local MSG = Buffer.New()
+
+	MSG:WriteUInt32(1337)
+	MSG:WriteUInt32(228)
+
+	Client.SetCertificate(MSG.Memory)
 end
