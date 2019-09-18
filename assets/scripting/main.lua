@@ -101,8 +101,3 @@ function MoveFrom(Target)
 	UserCmd.ForwardMove = -UserCmd.ForwardMove
 	UserCmd.SideMove = -UserCmd.SideMove
 end
-
-function IsVisible(Target)
-	local trace = Client.TraceLine(Vec3.New(Client.GetOrigin()), Target)
-	return trace.Fraction >= 1.0;
-end
